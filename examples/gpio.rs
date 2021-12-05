@@ -14,6 +14,7 @@ use cortex_m::{
 use cortex_m_rt::entry;
 
 use stm32_hal2::{
+    clocks::Clocks,
     gpio::{Edge, Pin, PinMode, PinState, Port},
     pac::{self, interrupt, EXTI},
 };
@@ -31,6 +32,17 @@ pub fn setup_pins() {
 
 #[entry]
 fn main() -> ! {
+    // Create an initial clock configuration that uses the MCU's internal oscillator (HSI),
+    // sets the MCU to its maximum system clock speed.
+    let clock_cfg = Clocks {
+        ..Default::default()
+    };
+
+    // Write the clock configuration to the MCU. If you wish, you can modify `clocks` above
+    // in accordance with [its docs](https://docs.rs/stm32-hal2/0.3.1/stm32_hal2/clocks/index.html),
+    // and the `clock_cfg` example.
+    clock_cfg.setup().unwrap();
+
     // Call a function we've made to help organize our pin setup code.
     setup_pins();
 
